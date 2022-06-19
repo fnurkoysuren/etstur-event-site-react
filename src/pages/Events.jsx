@@ -1,76 +1,92 @@
-import React from 'react'
-import { Box, Typography, Container, CardContent, CardActions, Button, Grid, Card, CardMedia, Stack } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Box, Button, Typography, Container, CardContent, Grid, Card, CardMedia, AppBar, Toolbar, Autocomplete, TextField } from '@mui/material'
+
 
 function Events() {
 
     const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+    const categoriesData = [{
+        id: 1,
+        name: 'Tiyatro'
+    }, {
+        id: 2,
+        name: 'Konser'
+    }, {
+        id: 3,
+        name: 'Geçmiş Etkinlikler'
+    }]
+
+    const [categories, setCategories] = useState(categoriesData)
+
+    useEffect(() => {
+        let autoData = [];
+
+        categories.forEach(element => {
+
+            autoData.push({ label: element.name, name: element.name })
+
+        });
+
+        setCategories(autoData)
+    }, [])
+
     return (<>
+        <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static" sx={{ bgcolor: "transparent", display:"flex", alignItems:"center" }}>
+                <Toolbar>
+                    <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={categories}
+                        sx={{ width: 300, m: 2 }}
+                        renderInput={(params) => <TextField {...params} label="Tüm Kategoriler" />}
+                    />
+                    <TextField
+                        id="date"
+                        label="Tarih"
+                        type="date"
+                        defaultValue="2017-05-24"
+                        sx={{ width: 220 }}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={categories}
+                        sx={{ width: 300, m: 2 }}
+                        renderInput={(params) => <TextField {...params} label="Yer" />}
+                    />
+                    <Button variant="contained" sx={{ml: 4}}>Ara</Button>
+                </Toolbar>
+            </AppBar>
+        </Box>
         <main>
-            {/* Hero unit */}
-            <Box
-                sx={{
-                    bgcolor: 'background.paper',
-                    pt: 8,
-                    pb: 6,
-                }}
-            >
-                <Container maxWidth="sm">
-                    <Typography
-                        component="h1"
-                        variant="h2"
-                        align="center"
-                        color="text.primary"
-                        gutterBottom
-                    >
-                        Album layout
-                    </Typography>
-                    <Typography variant="h5" align="center" color="text.secondary" paragraph>
-                        Something short and leading about the collection below—its contents,
-                        the creator, etc. Make it short and sweet, but not too short so folks
-                        don&apos;t simply skip over it entirely.
-                    </Typography>
-                    <Stack
-                        sx={{ pt: 4 }}
-                        direction="row"
-                        spacing={2}
-                        justifyContent="center"
-                    >
-                        <Button variant="contained">Main call to action</Button>
-                        <Button variant="outlined">Secondary action</Button>
-                    </Stack>
-                </Container>
-            </Box>
             <Container sx={{ py: 8 }} maxWidth="md">
                 {/* End hero unit */}
                 <Grid container spacing={4}>
                     {cards.map((card) => (
                         <Grid item key={card} xs={12} sm={6} md={4}>
                             <Card
-                                sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                                sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}
                             >
                                 <CardMedia
                                     component="img"
-                                    sx={{
-                                        // 16:9
-                                        pt: '56.25%',
-                                    }}
-                                    image="https://source.unsplash.com/random"
+                                    width="275px"
+                                    height="275px"
+                                    image="https://cdn.firsatbufirsat.com/files/images/deal/image/400x400/75/752441_5c0f.jpg?r=2"
                                     alt="random"
                                 />
                                 <CardContent sx={{ flexGrow: 1 }}>
-                                    <Typography gutterBottom variant="h5" component="h2">
-                                        Heading
+                                    <Typography gutterBottom variant="p" component="p">
+                                        Nazım Hikmet'in Annesi 'Celile' Tiyatro Oyun Bileti
                                     </Typography>
-                                    <Typography>
-                                        This is a media card. You can use this section to describe the
-                                        content.
+                                    <Typography sx={{ pt: 2 }}>
+                                        <b>65.<span>00</span> TL</b>
                                     </Typography>
                                 </CardContent>
-                                <CardActions>
-                                    <Button size="small">View</Button>
-                                    <Button size="small">Edit</Button>
-                                </CardActions>
                             </Card>
                         </Grid>
                     ))}
