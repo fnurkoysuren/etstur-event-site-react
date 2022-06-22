@@ -1,17 +1,22 @@
-import './App.css';
-import SiteHeader from './layout/SiteHeader';
-import SiteFooter from './layout/SiteFooter';
 import { Routes, Route } from 'react-router-dom';
 import Events from './pages/Events';
+import Header from './pages/layout/Header';
+import Footer from './pages/layout/Footer';
+import EventDetail from './pages/EventDetail';
 
 function App() {
 
   return (<>
-    <SiteHeader></SiteHeader>
+    <Header></Header>
     <Routes>
       <Route path={"/"} element={<Events />}></Route>
+      <Route path={"/:id/:name"} element={<Events />}></Route>
+      <Route path={"/:id/:name"} element={<Events />}></Route>
+      <Route path={"/:id/:name"} element={<Events />}></Route>
+      <Route path={"/:id/name"} element={<Events />}></Route>
+      <Route path={"/:name"} element={<EventDetail />}></Route>
     </Routes>
-    <SiteFooter></SiteFooter>
+    <Footer></Footer>
   </>);
 }
 
