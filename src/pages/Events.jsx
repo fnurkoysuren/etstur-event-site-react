@@ -24,54 +24,58 @@ function Events() {
 
     const [categories, setCategories] = useState(data.categories);
     const [events, setEvents] = useState(data.events);
-    const [searchCategory, setSearchCategory] = useState({});
 
     const navigate = useNavigate();
     let location = useLocation();
 
     let category = location.state != undefined ? location.state.category : '';
 
+    const stringToSearch = (string) => {
+        let letters = { "İ": "i", "I": "ı", "Ş": "ş", "Ğ": "ğ", "Ü": "ü", "Ö": "ö", "Ç": "ç" };
+        string = string.replace(/(([İIŞĞÜÇÖ]))/g, function (letter) { return letters[letter]; })
+        return string.toLowerCase();
+    }
+
     const searchEvents = () => {
         let newEvents = events;
         let eventCategory = document.getElementById("combo-box-demo").value;
         let eventDate = document.getElementById("date").value;
         let eventLocation = document.getElementById("outlined-search").value;
-        // let searchCategoryData = eventCategory.toLowerCase().trim();
-        // let newCategory = data.categories.filter(q => q.name.toLowerCase().includes(searchCategoryData));
-        // console.log("CATEGORY", newCategory[0]);
-        // setSearchCategory(newCategory[0]);
-        // newEvents = events.filter(q => q.categoryId == searchCategory.id);
 
-        // if (newEvents.length > 0) {
-        //     setEvents(newEvents);
-        // }
-
-        newEvents = events.filter(q => q.date == eventDate);
-
-        if (newEvents.length > 0) {
-            setEvents(newEvents);
+        if (eventCategory != '') {
+            let searchCategoryData = eventCategory.toLowerCase().trim();
+            let newCategory = data.categories.filter(q => q.name.toLowerCase().includes(searchCategoryData));
+            console.log("CATEGORY", newCategory[0]);
+            let searchData = newCategory[0]
+            newEvents = events.filter(q => q.categoryId == searchData.id);
+            if (newEvents.length > 0) {
+                setEvents(newEvents);
+            }
         }
 
-        let searchLocationData = eventLocation.toLowerCase().trim();
-        newEvents = events.filter(q => q.location.toLowerCase().includes(searchLocationData));
-        if (newEvents.length > 0) {
-            setEvents(newEvents);
+        if (eventDate != '') {
+            newEvents = events.filter(q => q.date == eventDate);
+
+            if (newEvents.length > 0) {
+                setEvents(newEvents);
+            }
+        }
+
+        if (eventLocation != '') {
+            let searchLocationData = eventLocation.toLowerCase().trim();
+            newEvents = events.filter(q => stringToSearch(q.location).includes(searchLocationData));
+            if (newEvents.length > 0) {
+                setEvents(newEvents);
+            }
         }
 
         console.log(newEvents);
-        console.log(searchCategory);
     }
 
     const loadData = (input) => {
         if (input === '') {
             setEvents(data.events);
         }
-        input.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                document.getElementById("search-btn").click();
-            }
-        });
     }
 
     const dateFormat = (date) => {
@@ -160,13 +164,13 @@ function Events() {
             )
                 : (
                     <Box sx={{ flexGrow: 1 }}>
-                        <AppBar position="static" sx={{ bgcolor: "transparent", display: "flex", alignItems: "center" }}>
+                        <AppBar position="static" sx={{ bgcolor: "transparent", display: "flex", alignItems: "center", p: 1 }}>
                             <Toolbar className="search-bar">
                                 <Autocomplete
                                     disablePortal
                                     id="combo-box-demo"
                                     options={categories}
-                                    sx={{ width: 240, m: 2 }}
+                                    sx={{ width: 240, m: 1 }}
                                     renderInput={(params) => <TextField {...params} label="Tüm Kategoriler" onChange={(e) => loadData(e.target.value)} />}
                                 />
                                 <TextField
@@ -174,13 +178,13 @@ function Events() {
                                     label="Tarih"
                                     type="date"
                                     defaultValue={getDate()}
-                                    sx={{ width: 240, mr: 2 }}
+                                    sx={{ width: 240, m: 1 }}
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
                                     onChange={(e) => loadData(e.target.value)}
                                 />
-                                <TextField id="outlined-search" sx={{ width: 240 }} label="Mekan veya şehre göre ara..." type="search" onChange={(e) => loadData(e.target.value)} />
+                                <TextField id="outlined-search" sx={{ width: 240, m: 1 }} label="Mekan veya şehre göre ara..." type="search" onChange={(e) => loadData(e.target.value)} />
                                 <Button id="search-btn" variant="contained" sx={{ ml: 4 }} onClick={() => searchEvents()}>Ara</Button>
                             </Toolbar>
                         </AppBar>
